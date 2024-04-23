@@ -1,10 +1,12 @@
 use std::io::stdin;
 
-const OPTIONS: (&str, &str, &str) = ("rock", "scissors", "paper");
+use rand::Rng;
 
-fn get_input(msg: &str) {
+const OPTIONS: [&str; 3] = ["rock", "scissors", "paper"];
+
+fn get_input(msg: &str) -> String {
     let mut input = String::new();
-    println!("{msg}");
+    println!("\n{msg}");
     stdin().read_line(&mut input).unwrap();
 
     match input.trim() {
@@ -12,12 +14,40 @@ fn get_input(msg: &str) {
         "scissors" => print!(""),
         "paper" => print!(""),
         "q" => std::process::exit(400),
-        _ => println!("There's no a valid option")
+        _ => println!("There's no a valid option"),
+    }
+
+    return input;
+}
+
+fn generate_random_option(input: &str) {
+    let mut rng = rand::thread_rng();
+    let option_number = rng.gen_range(0..3);
+    let option = OPTIONS[option_number];
+
+    println!("{option}");
+
+    // Handle options
+    if option == input {
+        println!("Tie!!");
+    } else if input == "rock" && option == "scissors" {
+        println!("You win!!");
+    } else if input == "rock" && option == "paper" {
+        println!("You lose");
+    } else if input == "scissors" && option == "paper" {
+        println!("You win!!");
+    } else if input == "scissors" && option == "rock" {
+        println!("You lose");
+    } else if input == "paper" && option == "rock" {
+        println!("You win!!");
+    } else if input == "paper" && option == "scissors" {
+        println!("You lose");
     }
 }
 
 fn main() {
     loop {
-        get_input("Select your option (rock, scissors or paper): ");
+        let input = get_input("Select your option (rock, scissors or paper): ");
+        generate_random_option(input.trim());
     }
 }
